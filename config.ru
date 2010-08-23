@@ -1,17 +1,15 @@
-require 'rubygems'
-require 'sinatra'
-require 'app.rb'
-path = ''
+framework 'ApplicationServices'
+require 'lib/jog_dial'
 
-set :root, path
-set :views, path + '/views'
-set :public,  path + '/public'
-set :run, false
-set :environment, :development
-set :raise_errors, true
+class JogDialApp
+  def call(env)
+    amount = env['QUERY_STRING'].to_i
+    JogDial.scroll(amount)
 
-log = File.new("sinatra.log", "a")
-STDOUT.reopen(log)
-STDERR.reopen(log)
+    [200, { 'Content-Type' => 'text/plain' }, "Scrolled #{amount}"]
+  end
+end
 
-run Sinatra::Application
+use Rack::Static, :urls => ["/css", "/images", "/index.html"], :root => "public"
+
+run JogDialApp.new
