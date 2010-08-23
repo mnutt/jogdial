@@ -15,9 +15,14 @@ var innerCircle = paper.circle(width / 2, height / 2, radius - 60);
 innerCircle.attr("fill", "#000");
 innerCircle.attr("stroke-width", 0);
 
-var rect = paper.rect(centerx - radius, centery - 5, 2 * radius, 10);
-rect.attr("fill", "#FFF");
-rect.attr("stroke-width", 0);
+//var rect = paper.rect(centerx - radius, centery - 5, 2 * radius, 10);
+//rect.attr("fill", "#FFF");
+//rect.attr("stroke-width", 0);
+var marker = paper.circle(centerx + radius - 30, centery, 28);
+marker.attr("fill", "#84C5FD");
+marker.attr("stroke-width", 0);
+
+var el = document.body.getElementsByTagName("svg")[0];
 
 angle = 90;
 
@@ -32,11 +37,12 @@ var move = function(dx, dy) {
   } else if(curx < 0) {
     angle = angle + 360;
   }
+  angle = angle - 90;
 
   var delta = angle - oldAngle;
 
-//  console.log([curx, cury, angle, delta]);
-  rect.rotate(delta);
+  //  rect.rotate(delta);
+  el.style["-webkit-transform"] = "rotate(" + angle + "deg)";
 
   var scrollAmount = Math.ceil(delta * 4);
   if(Math.abs(scrollAmount) > 100) { return; }
@@ -57,6 +63,7 @@ var start = function(dx, dy) {
 
 var overlay = paper.rect(0, 0, width, height);
 overlay.attr("fill", "transparent");
+overlay.attr("stroke-width", 0);
 
 overlay.drag(move, start, up);
 
